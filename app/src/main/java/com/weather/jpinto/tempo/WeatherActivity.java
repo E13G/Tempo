@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,6 +45,8 @@ public class WeatherActivity extends AppCompatActivity {
     private final String api = "https://www.metaweather.com/api/";
     private Boolean isDay = true;
 
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer_layout;
     @BindView(R.id.weather_layout)
     ConstraintLayout weather_layout;
     @BindView(R.id.weather_bar)
@@ -66,9 +71,48 @@ public class WeatherActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setupActionBarHomeButton();
+        setupDrawerListeners();
+
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         checkLocationPermission();
+    }
+
+    private void setupActionBarHomeButton() {
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_white_24dp);
+        }
+    }
+
+    private void setupDrawerListeners() {
+        drawer_layout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                    }
+
+                    @Override
+                    public void onDrawerOpened(@NonNull View drawerView) {
+                        // Respond when the drawer is opened
+                    }
+
+                    @Override
+                    public void onDrawerClosed(@NonNull View drawerView) {
+                        // Respond when the drawer is closed
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                    }
+                }
+        );
     }
 
     private void checkLocationPermission() {
@@ -81,6 +125,7 @@ public class WeatherActivity extends AppCompatActivity {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 // Logic to handle location object
+
                                 Double lat = location.getLatitude();
                                 Double lon = location.getLongitude();
                                 whereOnWorld(lat, lon);
@@ -89,6 +134,8 @@ public class WeatherActivity extends AppCompatActivity {
                             }
                         }
                     });
+        }else{
+            whereOnWorld("Lisbon");
         }
     }
 
@@ -99,6 +146,7 @@ public class WeatherActivity extends AppCompatActivity {
                 .setCallback(new FutureCallback<String>() {
                     @Override
                     public void onCompleted(Exception e, String result) {
+
                         whereOnWorldResultParse(result);
                     }
                 });
@@ -120,7 +168,7 @@ public class WeatherActivity extends AppCompatActivity {
         try {
             JSONArray citiesList = new JSONArray(result);
             JSONObject city = citiesList.getJSONObject(0);
-
+            WeatherActivity.this.setTitle(city.getString("title"));
             loadWeatherTodayData(city.getInt("woeid"));
 
         } catch (JSONException je) {
@@ -160,8 +208,6 @@ public class WeatherActivity extends AppCompatActivity {
                 .setCallback(new FutureCallback<String>() {
                     @Override
                     public void onCompleted(Exception e, String result) {
-                        // do stuff with the result or error
-                        Log.wtf("loadData", result);
                         try {
 
                             WeatherDay today = new WeatherDay();
@@ -203,7 +249,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     private long parseDateString(String time) {
 
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
         try {
             Date d = f.parse(time.split("T")[0]);
             return d.getTime();
@@ -310,6 +356,13 @@ public class WeatherActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                drawer_layout.openDrawer(GravityCompat.START);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
