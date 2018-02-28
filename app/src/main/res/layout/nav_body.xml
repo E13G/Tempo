@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Localization -->
+    <Switch
+        android:id="@+id/switch_localization"
+        style="@style/navBodyTextStyle"
+        android:layout_margin="8dp"
+        android:text="@string/nav_localization"
+        android:onClick="navLocalizationChange"/>
+
+    <TextView
+        android:id="@+id/search_localization"
+        android:drawableEnd="@drawable/ic_action_search"
+        style="@style/navBodyTextStyle"
+        android:layout_margin="8dp"
+        android:onClick="navCityChange"/>
+
+    <!-- Notifications -->
+    <Switch
+        android:id="@+id/switch_notifications"
+        style="@style/navBodyTextStyle"
+        android:layout_margin="8dp"
+        android:text="@string/nav_notifications"
+        android:onClick="navNotificationsChange"/>
+
+    <TextView
+        android:id="@+id/weather_refresh"
+        android:text="@string/nav_refresh"
+        android:drawableEnd="@drawable/ic_action_refresh"
+        style="@style/navBodyTextStyle"
+        android:layout_margin="8dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="8dp"
+        android:onClick="navRefresh"/>
+
+</LinearLayout>

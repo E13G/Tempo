@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Tempo.iml" filepath="$PROJECT_DIR$/Tempo.iml" />
-      <module fileurl="file://C:\Users\JPinto\Documents\Workspace\Android\Tempo\Tempo.iml" filepath="C:\Users\JPinto\Documents\Workspace\Android\Tempo\Tempo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\JPinto\Documents\Workspace\Android\Tempo\app\app.iml" filepath="C:\Users\JPinto\Documents\Workspace\Android\Tempo\app\app.iml" />
     </modules>
   </component>
 </project>

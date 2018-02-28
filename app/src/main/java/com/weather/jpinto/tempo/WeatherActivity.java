@@ -1,6 +1,7 @@
 package com.weather.jpinto.tempo;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -14,12 +15,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.*;
 
@@ -85,7 +88,7 @@ public class WeatherActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_white_24dp);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_action_menu);
         }
     }
 
@@ -228,6 +231,7 @@ public class WeatherActivity extends AppCompatActivity {
                             today.setMin_temp(todayWeatherDescription.getDouble("min_temp"));
                             today.setMax_temp(todayWeatherDescription.getDouble("max_temp"));
 
+                            setupNavigationDrawerText(today);
 
                             today.setSunrise(parseDateString(report.getString("sun_rise")));
                             today.setSunset(parseDateString(report.getString("sun_rise")));
@@ -276,11 +280,13 @@ public class WeatherActivity extends AppCompatActivity {
 
     private void populateWeatherLayout(WeatherDay today) {
 
+
         weather_location.setText(today.getCity() + ", " + today.getCountry());
         weather_status.setText(today.getWeather_state_name());
-        weather_temp.setText(Math.floor(today.getThe_temp()) + " ºC");
-        min_temp.setText(Math.floor(today.getMin_temp()) + " ºC");
-        max_temp.setText(Math.ceil(today.getMax_temp()) + " ºC");
+        weather_temp.setText(today.getThe_temp().intValue() + " ºC");
+        min_temp.setText(today.getMin_temp().intValue() + " ºC");
+        Double Max = Math.ceil(today.getMax_temp());
+        max_temp.setText(Max.intValue() + " ºC");
     }
 
     private void changeWeatherLayout() {
@@ -340,26 +346,12 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_weather, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
+        switch (id) {
             case android.R.id.home:
                 drawer_layout.openDrawer(GravityCompat.START);
                 return true;
@@ -367,4 +359,50 @@ public class WeatherActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void setupNavigationDrawerText(WeatherDay today){
+        TextView header_title = findViewById(R.id.header_title);
+        TextView header_weather = findViewById(R.id.header_weather);
+        TextView header_temp = findViewById(R.id.header_temp);
+        TextView search_localization = findViewById(R.id.search_localization);
+
+        search_localization.setText(today.getCity());
+        header_title.setText(today.getCity());
+        header_weather.setText(today.getWeather_state_name());
+        header_temp.setText(today.getThe_temp().intValue() + " ºC");
+    }
+
+    public void navLocalizationChange(View view){
+        Context context = getApplicationContext();
+        CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    public void navNotificationsChange(View view){
+        Context context = getApplicationContext();
+        CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    public void navCityChange(View view){
+        Context context = getApplicationContext();
+        CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    public void navRefresh(View view){
+        drawer_layout.closeDrawer(Gravity.START);
+        changeWeatherLayout();
+        checkLocationPermission();
+    }
+
 }
